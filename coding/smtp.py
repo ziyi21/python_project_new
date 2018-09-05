@@ -15,6 +15,7 @@ from email.mime.text import MIMEText
 from email.mime.image import MIMEImage
 from email.mime.application import MIMEApplication
 import datetime
+import time
 
 
 def Send_email_text(subject, content, filepath, receive_email):
@@ -119,15 +120,16 @@ def Send_email_text(subject, content, filepath, receive_email):
     finally:
         s.quit()
 
-
-subject = "2019届校招内推汇总表（更新至8.28）-有你Offer出品"
+now =  time.strftime('%Y-%m-%d', time.localtime(time.time()))
+subject = "2019届校招内推汇总表（更新至{0}.{1}）-有你Offer出品".format(now.split('-')[1].lstrip('0'), now.split('-')[2].lstrip('0'))
+# subject = "2019届校招内推汇总表（更新至9.5）-有你Offer出品"
 content = '小主，您的秋招内推汇总到了，请查收！感谢订阅有你Offer的秋招内推信息服务，有你Offer是面向全球求职者的一站式求职服务平台。我们拥有海量的实习信息、求职干货和就业指导，并提供1v1简历指导课程及1v1面试指导课程，助您斩获理想的offer~更多详情敬请关注【有你Offer】公众号~'
 jpg_path = '../data/img/有你Offer.jpg'
 # pdf_path = "c.pdf"
 # txt_path = "d\\e\\f.txt"
-xlsx_path = "../data/work/2019届校招内推汇总表（更新至8.28）-有你Offer出品.xlsx"
+xlsx_path = "../data/work/2019届校招内推汇总表（更新至{0}.{1}）-有你Offer出品.xlsx".format(now.split('-')[1].lstrip('0'), now.split('-')[2].lstrip('0'))
 file_path = [xlsx_path]  #发送三个文件到两个邮箱
-test_email = ['635516607@qq.com']
+test_email = ['635516607@qq.com', 'lvzeqin@126.com']
 receive_email1 = ['vita.yuhua.zhang@outlook.com']
 # receive_email1 = ['1428941524@qq.com','haxidata@163.com', 'kiisxx1993727@gmail.com', '744568921@qq.com']#"1428941524@qq.com",'744568921@qq.com'，'fsltus@126.com','haxidata@163.com', 'kiisxx1993727@gmail.com', 'fsltus@126.com'
 receive_email2 = ["1428941524@qq.com",'744568921@qq.com','haxidata@163.com', 'kiisxx1993727@gmail.com',]#"1428941524@qq.com",'744568921@qq.com'，'fsltus@126.com','haxidata@163.com', 'kiisxx1993727@gmail.com', 'fsltus@126.com'
@@ -403,7 +405,24 @@ shiyong0820 = [
     'm18211091722@163.com',
     'ddzeggs@163.com'
 ]
-#
+
+shiyong0905 = [
+    '296802587@qq.com',
+
+]
+shiyong0907 = [
+    'jiangyan297@163.com',
+    # '1831095906@qq.com'
+]
+shiyong0909 = [
+    '1253582635@qq.com'
+]
+sep0930 = ['zhangxuebing_96@163.com']
+oct1001 = ['617642097@qq.com']
+dec1203 = [
+    '362855216@qq.com'
+]
+
 # for emails in [sep0908, sep0910, sep0912, sep0914, sep0916, nov1108, nov1110, nov1112, nov1114, nov1116, nov1124, nov1126,nov1124,nov1126,nov1128,vip]:
 #     for receive_email in emails:
 #         print(receive_email)
@@ -414,15 +433,13 @@ shiyong0820 = [
 #         print(receive_email)
 #         Send_email_text(subject, content, file_path, receive_email)
 
-for emails in [test_email]:
+# for emails in [test_email]:
+#     for receive_email in emails:
+#         print(receive_email)
+#         Send_email_text(subject, content, file_path, receive_email)
+
+for emails in [shiyong0905, shiyong0907, shiyong0909, sep0908, sep0910, sep0912, sep0914, sep0916, sep0930, oct1001, nov1108, nov1110, nov1112, nov1114, nov1116, nov1124, nov1126, nov1128, dec1203, vip]:
     for receive_email in emails:
         print(receive_email)
+        # time.sleep(4)
         Send_email_text(subject, content, file_path, receive_email)
-
-# Send_email_text(subject, content, file_path, receive_email)
-# Send_email_text(subject, content, file_path, sep0908)
-# Send_email_text(subject, content, file_path, sep0910)
-# Send_email_text(subject, content, file_path, nov1108)
-# # Send_email_text(subject, content, file_path, nov1110)
-# Send_email_text(subject, content, file_path, shiyong0814)
-# Send_email_text(subject, content, file_path, shiyong0816)
