@@ -229,7 +229,7 @@ nov1110 = [
     'andrewchia@foxmail.com',
 ]
 
-nov1112=[
+nov1112 = [
     'yyxgio94@163.com',
     'cynthiafu9508@gmail.com',
     'liu.yaqi@husky.neu.edu',
@@ -287,6 +287,20 @@ vip = [
     'wangyue0710@163.com',
 ]
 
+dec1209 = ['18721225119@163.com']
+
+shiyong0915 = ['1228271924@qq.com']
+
+oct1010 = ['mia.bai.xxx@gmail.com']
+
+shiyong0917 = ['1497502591@qq.com','longjundu@163.com']
+
+dec1211 = ['zhangmengqi0331@163.com', 'swing.chen@outlook.com', '18811405506@163.com', 'sherxy16@163.com']
+
+oct1013 = ['348419137@qq.com', '70432715@qq.com', '472327077@qq.com', '897979317@qq.com']
+
+dec1213 = ['767035966@qq.com', 'zhoujingyi1993@163.com', 'yueqizhang127@163.com', '1823480524@qq.com', '617273459@qq.com']
+
 shiyong0814 = [
     '827089838@qq.com',
     '1083286282@qq.com',
@@ -315,7 +329,6 @@ shiyong0814 = [
     '599146834@qq.com',
     'huhuiqin24@163.com',
 ]
-
 
 
 shiyong0816 = [
@@ -423,6 +436,8 @@ dec1203 = [
     '362855216@qq.com'
 ]
 
+
+
 # for emails in [sep0908, sep0910, sep0912, sep0914, sep0916, nov1108, nov1110, nov1112, nov1114, nov1116, nov1124, nov1126,nov1124,nov1126,nov1128,vip]:
 #     for receive_email in emails:
 #         print(receive_email)
@@ -438,8 +453,23 @@ dec1203 = [
 #         print(receive_email)
 #         Send_email_text(subject, content, file_path, receive_email)
 
-for emails in [shiyong0905, shiyong0907, shiyong0909, sep0908, sep0910, sep0912, sep0914, sep0916, sep0930, oct1001, nov1108, nov1110, nov1112, nov1114, nov1116, nov1124, nov1126, nov1128, dec1203, vip]:
+# for emails in [shiyong0905, shiyong0907, shiyong0909, sep0908, sep0910, sep0912, sep0914, sep0916, sep0930, oct1001, nov1108, nov1110, nov1112, nov1114, nov1116, nov1124, nov1126, nov1128, dec1203, vip]:
+#     for receive_email in emails:
+#         print(receive_email)
+#         # time.sleep(4)
+#         Send_email_text(subject, content, file_path, receive_email)
+
+
+# 全部的
+# for emails in [dec1213, dec1211, shiyong0917, oct1010, oct1013, shiyong0907, shiyong0909, shiyong0915, sep0908, sep0910, sep0912, sep0914, sep0916,sep0930,oct1001, nov1108, nov1110, nov1112, nov1114, nov1116, nov1124, nov1126, nov1128,dec1203,vip, dec1209]:
+#     for receive_email in emails:
+#         print(receive_email)
+#         # time.sleep(4)
+#         Send_email_text(subject, content, file_path, receive_email)
+
+# 落下的
+for emails in [['617273459@qq.com']]:
     for receive_email in emails:
         print(receive_email)
-        # time.sleep(4)
         Send_email_text(subject, content, file_path, receive_email)
+
