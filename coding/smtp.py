@@ -120,62 +120,112 @@ def Send_email_text(subject, content, filepath, receive_email):
     finally:
         s.quit()
 
+
+def email_text(subject, content,  filepath , receive_email):
+    # sender = "digitalplanet@163.com"
+    sender = "haxidata@163.com"
+    passwd = "kong368534"
+    receivers = receive_email  # 收件人邮箱
+
+    msgRoot = MIMEMultipart()
+
+    msgRoot['From'] = sender
+    msgRoot['To'] = receivers
+
+    #     添加图片
+    fp = open('../data/img/有你Offer.jpg', 'rb')
+    msgImage = MIMEImage(fp.read())
+    fp.close()
+    msgImage.add_header('Content-ID', '<image1>')
+    msgRoot.attach(msgImage)
+
+    msgRoot['Subject'] = subject
+    part = MIMEText(content)
+    msgRoot.attach(part)
+
+    # html格式构造
+    html = """
+            <html> 
+              <head></head> 
+              <body> 
+                  <p>
+                    %s
+                   <br><img src="cid:image1"></br> 
+                  </p>
+              </body> 
+            </html> 
+            """ % (content)
+    htm = MIMEText(html, 'html', 'utf-8')
+    msgRoot.attach(htm)
+
+    ##添加附件部分
+    for path in filepath:
+        if ".jpg" in path or ".png" in path:
+            # jpg类型附件
+            jpg_name = path.split("/")[-1]
+            part = MIMEApplication(open(path, 'rb').read())
+            part.add_header('Content-Disposition', 'attachment', filename=('gbk', '',jpg_name))
+            msgRoot.attach(part)
+
+        if ".pdf" in path:
+            # pdf类型附件
+            pdf_name = path.split("/")[-1]
+            part = MIMEApplication(open(path, 'rb').read())
+            part.add_header('Content-Disposition', 'attachment', filename=pdf_name)
+            msgRoot.attach(part)
+
+        # if ".xlsx" in path:
+        #     # xlsx类型附件
+        #     xlsx_name = path.split("/")[-1]
+        #     part = MIMEApplication(open(path, 'rb').read())
+        #     # part.add_header('Content-Disposition', 'attachment', filename=xlsx_name)
+        #     part.add_header('Content-Disposition', 'attachment', filename=('gbk', '', xlsx_name))
+        #     # encoders.encode_base64(part)
+        #     msgRoot.attach(part)
+
+        if ".txt" in path:
+            # txt类型附件
+            txt_name = path.split("/")[-1]
+            part = MIMEApplication(open(path, 'rb').read())
+            # part.add_header('Content-Disposition', 'attachment', filename=txt_name)
+            part.add_header('Content-Disposition', 'attachment', filename=('gbk', '', txt_name))
+            encoders.encode_base64(part)
+            msgRoot.attach(part)
+
+
+        if ".mp3" in path:
+            # mp3类型附件
+            mp3_name = path.split("/")[-1]
+            part = MIMEApplication(open(path, 'rb').read())
+            part.add_header('Content-Disposition', 'attachment', filename=mp3_name)
+            msgRoot.attach(part)
+
+    try:
+        # s = smtplib.SMTP()
+        # s.set_debuglevel(1)
+        # print(msgRoot.as_string())
+        s = smtplib.SMTP()
+        s.connect("smtp.163.com")  # 这里我使用的是阿里云邮箱,也可以使用163邮箱：smtp.163.com
+        s.login(sender, passwd)
+        s.sendmail(sender, receivers, msgRoot.as_string())
+        print(subject,"邮件发送成功")
+    except smtplib.SMTPException as e:
+        print(e)
+        print("Error, 发送失败")
+    finally:
+        s.quit()
+
 now =  time.strftime('%Y-%m-%d', time.localtime(time.time()))
 subject = "2019届校招内推汇总表（更新至{0}.{1}）-有你Offer出品".format(now.split('-')[1].lstrip('0'), now.split('-')[2].lstrip('0'))
-# subject = "2019届校招内推汇总表（更新至9.5）-有你Offer出品"
-content = '小主，您的秋招内推汇总到了，请查收！感谢订阅有你Offer的秋招内推信息服务，有你Offer是面向全球求职者的一站式求职服务平台。我们拥有海量的实习信息、求职干货和就业指导，并提供1v1简历指导课程及1v1面试指导课程，助您斩获理想的offer~更多详情敬请关注【有你Offer】公众号~'
+# subject = "有你Offer全体成员祝你中秋节快乐哦"
+content = '小主，提前祝您国庆快乐哦！您的秋招内推汇总到了，请查收！感谢订阅有你Offer的秋招内推信息服务，有你Offer是面向全球求职者的一站式求职服务平台。我们拥有海量的实习信息、求职干货和就业指导，并提供1v1简历指导课程及1v1面试指导课程，助您斩获理想的offer~更多详情敬请关注【有你Offer】公众号~'
+# content = '小主，有你Offer全体成员祝你中秋节快乐哦!'+'\n'+'愿每位小主都能早日斩获心仪Offer。'+'\n'+'很抱歉告知大家，今天的内推订阅服务因假期停更噢，但有你Offer的心永远与你同在~~~'
 jpg_path = '../data/img/有你Offer.jpg'
 # pdf_path = "c.pdf"
 # txt_path = "d\\e\\f.txt"
 xlsx_path = "../data/work/2019届校招内推汇总表（更新至{0}.{1}）-有你Offer出品.xlsx".format(now.split('-')[1].lstrip('0'), now.split('-')[2].lstrip('0'))
 file_path = [xlsx_path]  #发送三个文件到两个邮箱
 test_email = ['635516607@qq.com', 'lvzeqin@126.com']
-receive_email1 = ['vita.yuhua.zhang@outlook.com']
-# receive_email1 = ['1428941524@qq.com','haxidata@163.com', 'kiisxx1993727@gmail.com', '744568921@qq.com']#"1428941524@qq.com",'744568921@qq.com'，'fsltus@126.com','haxidata@163.com', 'kiisxx1993727@gmail.com', 'fsltus@126.com'
-receive_email2 = ["1428941524@qq.com",'744568921@qq.com','haxidata@163.com', 'kiisxx1993727@gmail.com',]#"1428941524@qq.com",'744568921@qq.com'，'fsltus@126.com','haxidata@163.com', 'kiisxx1993727@gmail.com', 'fsltus@126.com'
-receive_email3 = ["1428941524@qq.com",'744568921@qq.com','haxidata@163.com', 'kiisxx1993727@gmail.com',]#"1428941524@qq.com",'744568921@qq.com'，'fsltus@126.com','haxidata@163.com', 'kiisxx1993727@gmail.com', 'fsltus@126.com'
-receive_email4 = ["1428941524@qq.com",'744568921@qq.com','haxidata@163.com', 'kiisxx1993727@gmail.com',]#"1428941524@qq.com",'744568921@qq.com'，'fsltus@126.com','haxidata@163.com', 'kiisxx1993727@gmail.com', 'fsltus@126.com'
-
-sep0908 = [
-    'yangxiaoxiaotom@163.com',
-    'xiaoyannju@foxmail.com',
-    'g1w99x588@163.com',
-    'shiyuhuang18@163.com',
-    '602621267@qq.com',
-    'wanmengdamon@gmail.com'
-       ]
-
-sep0910 = [
-    '491660265@qq.com',
-    'xchen6426@163.com',
-    'fxg032zjc@163.com',
-    '850094297@qq.com',
-    '853202596@qq.com',
-    '39821737@qq.com',
-    '616394890@qq.com',
-    '1486636925@qq.com',
-    'vanilla_my@foxmail.com',
-    '330594115@qq.com'
-       ]
-
-sep0912 = [
-    'wy312336@163.com',
-    '2803351027@qq.com',
-    'xt17510@163.com',
-    '13051606766@163.com',
-    '945262781@qq.com',
-    '978864796@qq.com',
-    '493190776@qq.com',
-]
-
-sep0914 = [
-    '1242310252@qq.com',
-    '939535997@qq.com',
-]
-
-sep0916 = [
-    '976932442@qq.com'
-]
 
 nov1108 = [
     '744568921@qq.com',
@@ -289,187 +339,41 @@ vip = [
 
 dec1209 = ['18721225119@163.com']
 
-shiyong0915 = ['1228271924@qq.com']
-
 oct1010 = ['mia.bai.xxx@gmail.com']
-
-shiyong0917 = ['1497502591@qq.com','longjundu@163.com']
 
 dec1211 = ['zhangmengqi0331@163.com', 'swing.chen@outlook.com', '18811405506@163.com', 'sherxy16@163.com']
 
-oct1013 = ['348419137@qq.com', '70432715@qq.com', '472327077@qq.com', '897979317@qq.com']
+oct1013 = ['348419137@qq.com', '704327115@qq.com', '472327077@qq.com', '897979317@qq.com', '1070461019@qq.com']
 
-dec1213 = ['767035966@qq.com', 'zhoujingyi1993@163.com', 'yueqizhang127@163.com', '1823480524@qq.com', '617273459@qq.com']
+dec1213 = ['767035966@qq.com', 'zhoujingyi1993@163.com', 'yueqizhang127@163.com', '1823480524@qq.com', '617273459@qq.com', 'cristal_jj@163.com', '17607133268@163.com', '403607837@qq.com']
 
-shiyong0814 = [
-    '827089838@qq.com',
-    '1083286282@qq.com',
-    '250270834@qq.com',
-    'yaodanuan@163.com',
-    '13842025635@163.com',
-    'rl_96118@163.com',
-    'domixsean@outlook.com',
-    'sh534367384@163.com',
-    '294978075@qq.com',
-    '18025576158@163.com',
-    '1461300468@qq.com',
-    '1194011352@qq.com',
-    '2601094287@qq.com',
-    '179601373@qq.com',
-    '1604858331@qq.com',
-    'lixiaofeibj@163.com',
-    '13146981615@163.com',
-    'hejingjinghz@163.com',
-    '406228304@qq.com',
-    '1620626489@qq.com',
-    'alanguohello@163.com',
-    '1186344741@qq.com',
-    '171743566@qq.com',
-    '15917175129@163.com',
-    '599146834@qq.com',
-    'huhuiqin24@163.com',
-]
+dec1215 = ['Ldq527@163.com', '1161229739@qq.com', '1540326006@qq.com', '3293581247@qq.com']
 
-
-shiyong0816 = [
-    'chuchupray@126.com',
-    'lz392@georgetown.edu',
-    'jinwy1105@163.com',
-    'CassiopeiaElina@163.com',
-    'sdkjdxhxy@163.com',
-    '3156287385@qq.com',
-]
-shiyong0818 = [
-    'jm0917@126.com',
-    '214297458@qq.com',
-    '290546789@qq.com',
-    'xu944678895@163.com',
-    '1608175731@qq.com',
-    'wangyue0710@163.com',
-    '1823682250@qq.com',
-]
-shiyong0820 = [
-    '3048814801@qq.com',
-    'qianyjtd@gmail.com',
-    'wangying920205@126.com',
-    '2462806920@qq.com',
-    '877725901@qq.com',
-    '374380547@qq.com',
-    '978764156@qq.com',
-    '515638594@qq.com',
-    'waiyuzhaodan@163.com',
-    'zhangxinyi_d@163.com',
-    '18845796314@163.com',
-    '974303861@qq.com',
-    '314545988@qq.com',
-    '328820975@qq.com',
-    'hrx19960118@outlook.com',
-    '2284013920@qq.com',
-    '1099802150@qq.com',
-    '499210390@qq.com',
-    'lesleyrae88@hotmail.com',
-    '1592380482@qq.com',
-    '515638594@qq.com',
-    '2366690017@qq.com',
-    'esx56487@qq.com',
-    '575206410@qq.com',
-    '785584249@qq.com',
-    '1582667364@qq.com',
-    '1181990832@qq.com',
-    'fanzixuan121@163.com',
-    '1297581142@qq.com',
-    'chan_suetying@163.com',
-    '949485172@qq.com',
-    'xili9459@uni.sydney.edu.au',
-    'shilili0310@126.com',
-    '821943130@qq.com',
-    '708844241@qq.com',
-    '956329053@qq.com',
-    'dwq_1993@163.com',
-    '811637478@qq.com',
-    '18731203083@163.com',
-    'xuexx207@hotmail.com',
-    '1551545227@qq.com',
-    '503003972@qq.com',
-    '409073748@qq.com',
-    'whl1203296651@qq.com',
-    '1033492896@qq.com',
-    'praha_wang@163.com',
-    '635936876@qq.com',
-    '421163021@qq.com',
-    'sannalulu@126.com',
-    '18895635091@163.com',
-    'qiuyurui21@163.com',
-    'sybil24@yeah.net',
-    '2213855318@qq.com',
-    '1723198738@qq.com',
-    '44632290@qq.com',
-    'dairuyi940615@163.com',
-    'wuqingyi_job@163.com',
-    '619230050@qq.com',
-    '1539501382@qq.com',
-    'mrq007@yeah.net',
-    '544594786@qq.com',
-    '850695156@qq.com',
-    '879127500@qq.com',
-    'zhutaomine@foxmail.com',
-    '1260739661@qq.com',
-    '512581502@qq.com',
-    'm18211091722@163.com',
-    'ddzeggs@163.com'
-]
-
-shiyong0905 = [
-    '296802587@qq.com',
-
-]
-shiyong0907 = [
-    'jiangyan297@163.com',
-    # '1831095906@qq.com'
-]
-shiyong0909 = [
-    '1253582635@qq.com'
-]
-sep0930 = ['zhangxuebing_96@163.com']
 oct1001 = ['617642097@qq.com']
-dec1203 = [
-    '362855216@qq.com'
-]
+dec1203 = ['362855216@qq.com']
 
+oct1017 = ['2775907278@qq.com', '154434273@qq.com']
 
+dec1217 = ['15863717312@163.com', 'Guodingsan@outlook.com']
+dec1219 = ['1540621110@qq.com', 'ydc19940214@163.com', 'weiyaxin1997@126.com', '17805132858@163.com', '18817870461@163.com']
+oct1019 = ['1311339200@qq.com', '505612217@qq.com', '1398113974@qq.com', '1451792508@qq.com', 'dayvivid@163.com']
+sep0926 = ['huanghuang9503@outlook.com', '496197883@qq.com']
+oct1020 = ['HouMengjuan123@163.com']
+oct1023 = ['flowergogo@163.com']
+oct1025 = ['bkqiuhuan@163.com']
+oct1002 = ['frankachen@163.com']
+oct1030 = ['xt17510@163.com']
+# 全部的
 
-# for emails in [sep0908, sep0910, sep0912, sep0914, sep0916, nov1108, nov1110, nov1112, nov1114, nov1116, nov1124, nov1126,nov1124,nov1126,nov1128,vip]:
-#     for receive_email in emails:
-#         print(receive_email)
-#         Send_email_text(subject, content, file_path, receive_email)
+for emails in [oct1030, oct1002, oct1025, test_email, oct1023, oct1020, dec1219, oct1019, dec1217, oct1017, dec1215, oct1013, dec1213, dec1211, oct1010, oct1001, nov1108, nov1110, nov1112, nov1114, nov1116, nov1124, nov1126, nov1128,dec1203,vip, dec1209]:
+    for receive_email in emails:
+        print(receive_email)
+        # time.sleep(4)
+        Send_email_text(subject, content, file_path, receive_email)
 
-# for emails in [receive_email1]:
-#     for receive_email in emails:
-#         print(receive_email)
-#         Send_email_text(subject, content, file_path, receive_email)
-
+# 落下的
 # for emails in [test_email]:
 #     for receive_email in emails:
 #         print(receive_email)
 #         Send_email_text(subject, content, file_path, receive_email)
-
-# for emails in [shiyong0905, shiyong0907, shiyong0909, sep0908, sep0910, sep0912, sep0914, sep0916, sep0930, oct1001, nov1108, nov1110, nov1112, nov1114, nov1116, nov1124, nov1126, nov1128, dec1203, vip]:
-#     for receive_email in emails:
-#         print(receive_email)
-#         # time.sleep(4)
-#         Send_email_text(subject, content, file_path, receive_email)
-
-
-# 全部的
-# for emails in [dec1213, dec1211, shiyong0917, oct1010, oct1013, shiyong0907, shiyong0909, shiyong0915, sep0908, sep0910, sep0912, sep0914, sep0916,sep0930,oct1001, nov1108, nov1110, nov1112, nov1114, nov1116, nov1124, nov1126, nov1128,dec1203,vip, dec1209]:
-#     for receive_email in emails:
-#         print(receive_email)
-#         # time.sleep(4)
-#         Send_email_text(subject, content, file_path, receive_email)
-
-# 落下的
-for emails in [['617273459@qq.com']]:
-    for receive_email in emails:
-        print(receive_email)
-        Send_email_text(subject, content, file_path, receive_email)
 
